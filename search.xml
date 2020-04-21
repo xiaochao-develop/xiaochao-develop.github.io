@@ -55,6 +55,418 @@
       </tags>
   </entry>
   <entry>
+    <title>CSS3 border-image 彻底明白</title>
+    <url>/2020/04/21/CSS3%20border-image%20%E5%BD%BB%E5%BA%95%E6%98%8E%E7%99%BD/</url>
+    <content><![CDATA[<p><a href="https://segmentfault.com/a/1190000010969367" target="_blank" rel="noopener">转载自：https://segmentfault.com/a/1190000010969367</a></p>
+<h2 id="border-image用于给border（边框）贴上背景图像"><a href="#border-image用于给border（边框）贴上背景图像" class="headerlink" title="border-image用于给border（边框）贴上背景图像"></a><strong>border-image用于给border（边框）贴上背景图像</strong></h2><blockquote>
+<p>类似于CSS中的background（背景）属性。 例如：background:url(xx.jpg) 27px no-repeat;指的是图片(url(xx.jpg))，位置(27px)，重复性(no-repeat)。</p>
+<p>border-image与此类似，border-image包括图片，剪裁位置（与background位置一样，也是数值，也支持百分值），重复性。<br>例如：border-image:url(border.png) 27 repeat; 指的就是图片(url(border.png))，剪裁位置(27)，重复方式(repeat)。  </p>
+<p><img src="https://segmentfault.com/img/bVUgue?w=392&h=166" alt=""></p>
+</blockquote>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">下面我们将border-image的复合写法分解描述，</span><br><span class="line"></span><br><span class="line">border-image的主要参数就是上面提到的三个：图片，剪裁位置，重复性。</span><br><span class="line">其实还有另外两个，文章最后面再讲。更好理解</span><br></pre></td></tr></table></figure>
+
+<h2 id="1、图片-border-image-source"><a href="#1、图片-border-image-source" class="headerlink" title="1、图片(border-image-source)"></a>1、图片(border-image-source)</h2><ul>
+<li>border-image的背景图使用url()调用，图片可以是相对路径或是绝对路径，也可以不使用图片，即border-image:none;</li>
+</ul>
+<h2 id="2、图片剪裁位置-border-image-slice"><a href="#2、图片剪裁位置-border-image-slice" class="headerlink" title="2、图片剪裁位置(border-image-slice)"></a>2、图片剪裁位置(border-image-slice)</h2><ul>
+<li>没有单位，默认单位就是像素(px)。例如：border-image:url(border.png) 27 repeat;这里的27专指27px。</li>
+</ul>
+<hr>
+<ul>
+<li>支持百分比值，百分比值大小是相对于边框图片的大小，假设边框图片大小为400px*300px，则20%的实际效果就是剪裁了图片的60px 80px 60px 80px的四边大小。</li>
+</ul>
+<hr>
+<ul>
+<li>剪裁特性。类似于CSS中的clip属性。其有1~4个参数，代表上右下左四个方位的剪裁，符合CSS普遍的方位规则（与margin，padding等或border-width一致），举个简单的例子，前面提到，支持百分比宽度，所以这里“30% 35% 40% 30%”的示意可以用下图表示：<br><img src="https://segmentfault.com/img/bVUaSf?w=180&h=191" alt=""></li>
+</ul>
+<p><em>距离图片上部30%的地方，距离右边35%，距离底部40%，左边30%的地方各剪裁一下。也就是对图片进行了“四刀切”，形成了九个分离的区域，这就是九宫格，这是下面深入讲解border-image的基础。</em></p>
+<h2 id="3、重复性-border-image-repeat"><a href="#3、重复性-border-image-repeat" class="headerlink" title="3、重复性(border-image-repeat)"></a>3、重复性(border-image-repeat)</h2><p>取值为repeat（重复）只是其中之一，其余两个是round（平铺）和stretch（拉伸）。其中，stretch是默认值。</p>
+<p>参数0~2个，0则使用默认值 – stretch，例如：border-image:url(border.png) 30% 40%;就等同于border-image:url(border.png) 30% 40% stretch stretch;；1则表示水平方向及垂直方向均使用此参数；2个参数的话则第一个参数表水平方向，第二个参数表示垂直方向。例如：border-image:url(border.png) 30% 40% round repeat;表示水平方向round（平铺），垂直方向repeat（重复）。</p>
+<p>关于round 和repeat 的区别。<br><strong>round会凑整填充（进行了适度的拉伸）。repeat不进行拉伸，不凑整。</strong> 具体效果看文章后边的例子。</p>
+<h2 id="4、实际渲染规则"><a href="#4、实际渲染规则" class="headerlink" title="4、实际渲染规则"></a>4、实际渲染规则</h2><p>通过裁切属性值，将边框背景图切出了“九宫格”的模型，那这张背景图怎么对应地贴在div的边框上呢？</p>
+<p><img src="https://segmentfault.com/img/bVUbpI?w=81&h=81" alt=""><br> &lt;————————&gt; <img src="https://segmentfault.com/img/bVUbqb?w=81&h=81" alt=""></p>
+<p><img src="https://segmentfault.com/img/bVUbyB?w=337&h=338" alt=""></p>
+<ul>
+<li><strong>如图 在border-image中的橙红色的四个边角只会呆在border的四个角,并且水平和垂直方向均被拉伸来填充border的四个角。</strong></li>
+<li>如图 上下区域即border-top-image和border-bottom-image受到第一个参数——水平方向效果影响：如果为repeat，则此区域被水平重复(round水平平铺，stretch水平拉伸)来填充对应的上下border<strong>【该区域在垂直方向上首先会按所对应的border-image-width的值等比缩放，然后再按参数设置在边框水平方向上进行重复或平铺或拉伸】</strong></li>
+<li>左右区域border-left-image和border-right-image 的作用效果亦然<strong>【该区域在水平方向上首先会按所对应的border-image-width的值等比缩放，然后再按参数设置在边框垂直方向上进行重复或平铺或拉伸】</strong></li>
+</ul>
+<hr>
+<p><img src="https://segmentfault.com/img/bVUm4X?w=800&h=382" alt=""></p>
+<hr>
+<hr>
+<p>我们用下图<strong>(27×3)px *(27×3)px</strong>png 做实验，我给不同部位加了一个序号做标志，便于观察。<br><img src="https://segmentfault.com/img/bVUbhS?w=81&h=81" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 加一个蓝色背景的父级，便于我们分析效果。</span><br><span class="line">.border_image &#123;</span><br><span class="line">    width: 400px;</span><br><span class="line">    height: 115px;</span><br><span class="line">    border: 3em double orange;</span><br><span class="line">    -webkit-border-image: url(border.png) 27 round;</span><br><span class="line">    border-image: url(border.png) 27 round;</span><br><span class="line">&#125;</span><br><span class="line">.box &#123;</span><br><span class="line">    background: blue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;div class&#x3D;&quot;box&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;border_image&quot;&gt;&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbm2?w=655&h=275" alt=""></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">border-image: url(border.png) 27;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbni?w=720&h=262" alt=""></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">border-image: url(border.png) 27 repeat;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbnK?w=541&h=246" alt=""></p>
+<hr>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;边框宽度改变</span><br><span class="line">border-image: url(border.png) 27 repeat stretch;</span><br><span class="line">border-width: 3rem 1rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<p><img src="https://segmentfault.com/img/bVUbMp?w=506&h=254" alt=""></p>
+<hr>
+<hr>
+<h2 id="5、-边框背景宽度-border-image-width"><a href="#5、-边框背景宽度-border-image-width" class="headerlink" title="5、(边框背景宽度)border-image-width"></a>5、(边框背景宽度)border-image-width</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">这个属性默认是边框的宽度，用来限制相应区域背景图的范围，</span><br><span class="line">首先相应背景区域的图像会根据这个属性值进行缩放。然后再重复或平铺或拉伸。</span><br><span class="line"></span><br><span class="line">在复合写法中应该位于 slice属性 和repeat属性中间 用“&#x2F;”间隔</span><br><span class="line">如：border-image:url(border.png) 27 &#x2F; 6rem &#x2F; repeat;</span><br></pre></td></tr></table></figure>
+
+<p>语法：border-image-width: [ <length> | <percentage> | <number> | auto ]{1,4}</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">length 带 px, em, in … 单位的尺寸值</span><br><span class="line">percentage 百分比</span><br><span class="line">number 不带单位的数字；它表示 border-width 的倍数</span><br><span class="line">auto 使用 auto， border-image-width 将会使用 border-image-slice 的值</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 6rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUetX?w=682&h=260" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">border-image-width: 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUeuW?w=659&h=255" alt=""></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 6rem 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUeCn?w=753&h=281" alt=""></p>
+<h2 id="6、（边框背景扩散）border-image-outset"><a href="#6、（边框背景扩散）border-image-outset" class="headerlink" title="6、（边框背景扩散）border-image-outset"></a>6、（边框背景扩散）border-image-outset</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">语法：border-image-outset: [ &lt;length&gt; | &lt;number&gt; ]&#123;1,4&#125;</span><br><span class="line">相当于把原来的贴图位置向外延伸。不能为负值，试一下就知道。</span><br><span class="line"></span><br><span class="line">在复合写法中应该位于 border-image-width 后面，用“&#x2F;”间隔</span><br><span class="line">如：border-image:url(border.png) 27 &#x2F; 6rem &#x2F; 1.5rem &#x2F;repeat;</span><br><span class="line">向外延伸1.5rem再贴图。。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 1.5rem;</span><br><span class="line">border-image-outset: 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下：<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUewz?w=777&h=325" alt=""></p>
+<p>ps 部分资料来源网络</p>
+]]></content>
+      <categories>
+        <category>CSS</category>
+      </categories>
+      <tags>
+        <tag>CSS属性</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flex 布局教程：语法篇</title>
+    <url>/2020/04/21/Flex%20%E5%B8%83%E5%B1%80%E6%95%99%E7%A8%8B%EF%BC%9A%E8%AF%AD%E6%B3%95%E7%AF%87/</url>
+    <content><![CDATA[<p><a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html" target="_blank" rel="noopener">转载自：http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html</a></p>
+<p>网页布局（layout）是 CSS 的一个重点应用。<br /><br><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071001.gif#align=left&display=inline&height=352&originHeight=352&originWidth=403&status=done&style=none&width=403" alt=""><br /><br><br />布局的传统解决方案，基于<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/box_model" target="_blank" rel="noopener">盒状模型</a>，依赖 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display" target="_blank" rel="noopener"><code>display</code></a> 属性 + <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position" target="_blank" rel="noopener"><code>position</code></a>属性 + <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/float" target="_blank" rel="noopener"><code>float</code></a>属性。它对于那些特殊布局非常不方便，比如，<a href="https://css-tricks.com/centering-css-complete-guide/" target="_blank" rel="noopener">垂直居中</a>就不容易实现。<br /></p>
+<a id="more"></a>
+
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071002.png#align=left&display=inline&height=368&originHeight=368&originWidth=700&status=done&style=none&width=700" alt=""><br /><br><br />2009年，W3C 提出了一种新的方案—-Flex 布局，可以简便、完整、响应式地实现各种页面布局。目前，它已经得到了所有浏览器的支持，这意味着，现在就能很安全地使用这项功能。<br /><br><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071003.jpg#align=left&display=inline&height=317&originHeight=317&originWidth=899&status=done&style=none&width=899" alt=""><br /><br><br />Flex 布局将成为未来布局的首选方案。本文介绍它的语法，<a href="http://www.ruanyifeng.com/blog/2015/07/flex-examples.html" target="_blank" rel="noopener">下一篇文章</a>给出常见布局的 Flex 写法。网友 <a href="http://vgee.cn/" target="_blank" rel="noopener">JailBreak</a> 为本文的所有示例制作了 <a href="http://static.vgee.cn/static/index.html" target="_blank" rel="noopener">Demo</a>，也可以参考。<br /><br><br />以下内容主要参考了下面两篇文章：<a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/" target="_blank" rel="noopener">A Complete Guide to Flexbox</a> 和 <a href="https://scotch.io/tutorials/a-visual-guide-to-css3-flexbox-properties" target="_blank" rel="noopener">A Visual Guide to CSS3 Flexbox Properties</a>。<br /></p>
+<p><a name="74130491"></a></p>
+<h2 id="一、Flex-布局是什么？"><a href="#一、Flex-布局是什么？" class="headerlink" title="一、Flex 布局是什么？"></a>一、Flex 布局是什么？</h2><p><br />Flex 是 Flexible Box 的缩写，意为”弹性布局”，用来为盒状模型提供最大的灵活性。<br /><br><br />任何一个容器都可以指定为 Flex 布局。<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>.box{<br>  display: flex;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;行内元素也可以使用 Flex 布局。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>.box{<br>  display: inline-flex;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;Webkit 内核的浏览器，必须加上&#96;-webkit&#96;前缀。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.box&#123;</span><br><span class="line"> display: -webkit-flex; </span><br><span class="line"> display: flex;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br />注意，设为 Flex 布局以后，子元素的<code>float</code>、<code>clear</code>和<code>vertical-align</code>属性将失效。<br /></p>
+<p><a name="6b564e78"></a></p>
+<h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><p><br />采用 Flex 布局的元素，称为 Flex 容器（flex container），简称”容器”。它的所有子元素自动成为容器成员，称为 Flex 项目（flex item），简称”项目”。<br /><br><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071004.png#align=left&display=inline&height=333&originHeight=333&originWidth=563&status=done&style=none&width=563" alt=""><br /><br><br />容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。主轴的开始位置（与边框的交叉点）叫做<code>main start</code>，结束位置叫做<code>main end</code>；交叉轴的开始位置叫做<code>cross start</code>，结束位置叫做<code>cross end</code>。<br /><br><br />项目默认沿主轴排列。单个项目占据的主轴空间叫做<code>main size</code>，占据的交叉轴空间叫做<code>cross size</code>。<br /></p>
+<p><a name="17a0fadc"></a></p>
+<h2 id="三、容器的属性"><a href="#三、容器的属性" class="headerlink" title="三、容器的属性"></a>三、容器的属性</h2><p><br />以下6个属性设置在容器上。<br /></p>
+<blockquote>
+<ul>
+<li>flex-direction</li>
+<li>flex-wrap</li>
+<li>flex-flow</li>
+<li>justify-content</li>
+<li>align-items</li>
+<li>align-content</li>
+</ul>
+</blockquote>
+<p><a name="90751284"></a></p>
+<h3 id="3-1-flex-direction属性"><a href="#3-1-flex-direction属性" class="headerlink" title="3.1 flex-direction属性"></a>3.1 flex-direction属性</h3><p><br /><code>flex-direction</code>属性决定主轴的方向（即项目的排列方向）。<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.box &#123;</span><br><span class="line"> flex-direction: row | row-reverse | column | column-reverse;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071005.png#align=left&display=inline&height=203&originHeight=203&originWidth=796&status=done&style=none&width=796" alt=""><br /><br><br />它可能有4个值。<br /></p>
+<blockquote>
+<ul>
+<li><code>row</code>（默认值）：主轴为水平方向，起点在左端。</li>
+<li><code>row-reverse</code>：主轴为水平方向，起点在右端。</li>
+<li><code>column</code>：主轴为垂直方向，起点在上沿。</li>
+<li><code>column-reverse</code>：主轴为垂直方向，起点在下沿。</li>
+</ul>
+</blockquote>
+<p><a name="8c082a69"></a></p>
+<h3 id="3-2-flex-wrap属性"><a href="#3-2-flex-wrap属性" class="headerlink" title="3.2 flex-wrap属性"></a>3.2 flex-wrap属性</h3><p><br />默认情况下，项目都排在一条线（又称”轴线”）上。<code>flex-wrap</code>属性定义，如果一条轴线排不下，如何换行。<br /><br><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071006.png#align=left&display=inline&height=276&originHeight=276&originWidth=798&status=done&style=none&width=798" alt=""><br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>.box{<br>  flex-wrap: nowrap | wrap | wrap-reverse;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;它可能取三个值。&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;（1）&#96;nowrap&#96;（默认）：不换行。&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;![](http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blogimg&#x2F;asset&#x2F;2015&#x2F;bg2015071007.png#align&#x3D;left&amp;display&#x3D;inline&amp;height&#x3D;145&amp;originHeight&#x3D;145&amp;originWidth&#x3D;700&amp;status&#x3D;done&amp;style&#x3D;none&amp;width&#x3D;700)&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;（2）&#96;wrap&#96;：换行，第一行在上方。&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;![](http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blogimg&#x2F;asset&#x2F;2015&#x2F;bg2015071008.jpg#align&#x3D;left&amp;display&#x3D;inline&amp;height&#x3D;177&amp;originHeight&#x3D;177&amp;originWidth&#x3D;700&amp;status&#x3D;done&amp;style&#x3D;none&amp;width&#x3D;700)&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;（3）&#96;wrap-reverse&#96;：换行，第一行在下方。&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;![](http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blogimg&#x2F;asset&#x2F;2015&#x2F;bg2015071009.jpg#align&#x3D;left&amp;display&#x3D;inline&amp;height&#x3D;177&amp;originHeight&#x3D;177&amp;originWidth&#x3D;700&amp;status&#x3D;done&amp;style&#x3D;none&amp;width&#x3D;700)&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;6c3f699a&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 3.3 flex-flow</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;flex-flow&#96;属性是&#96;flex-direction&#96;属性和&#96;flex-wrap&#96;属性的简写形式，默认值为&#96;row nowrap&#96;。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>.box {<br>  flex-flow: <flex-direction> || <flex-wrap>;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;ecb48cc3&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 3.4 justify-content属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;justify-content&#96;属性定义了项目在主轴上的对齐方式。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.box &#123;</span><br><span class="line"> justify-content: flex-start | flex-end | center | space-between | space-around;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071010.png#align=left&display=inline&height=763&originHeight=763&originWidth=637&status=done&style=none&width=637" alt=""><br /><br><br />它可能取5个值，具体对齐方式与轴的方向有关。下面假设主轴为从左到右。<br /></p>
+<blockquote>
+<ul>
+<li><code>flex-start</code>（默认值）：左对齐</li>
+<li><code>flex-end</code>：右对齐</li>
+<li><code>center</code>： 居中</li>
+<li><code>space-between</code>：两端对齐，项目之间的间隔都相等。</li>
+<li><code>space-around</code>：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。</li>
+</ul>
+</blockquote>
+<p><a name="9c11c4c8"></a></p>
+<h3 id="3-5-align-items属性"><a href="#3-5-align-items属性" class="headerlink" title="3.5 align-items属性"></a>3.5 align-items属性</h3><p><br /><code>align-items</code>属性定义项目在交叉轴上如何对齐。<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.box &#123;</span><br><span class="line"> align-items: flex-start | flex-end | center | baseline | stretch;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071011.png#align=left&display=inline&height=786&originHeight=786&originWidth=617&status=done&style=none&width=617" alt=""><br /><br><br />它可能取5个值。具体的对齐方式与交叉轴的方向有关，下面假设交叉轴从上到下。<br /></p>
+<blockquote>
+<ul>
+<li><code>flex-start</code>：交叉轴的起点对齐。</li>
+<li><code>flex-end</code>：交叉轴的终点对齐。</li>
+<li><code>center</code>：交叉轴的中点对齐。</li>
+<li><code>baseline</code>: 项目的第一行文字的基线对齐。</li>
+<li><code>stretch</code>（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。</li>
+</ul>
+</blockquote>
+<p><a name="5f179627"></a></p>
+<h3 id="3-6-align-content属性"><a href="#3-6-align-content属性" class="headerlink" title="3.6 align-content属性"></a>3.6 align-content属性</h3><p><br /><code>align-content</code>属性定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。（实测起作用）<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>.box {<br>  align-content: flex-start | flex-end | center | space-between | space-around | stretch;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;![](http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blogimg&#x2F;asset&#x2F;2015&#x2F;bg2015071012.png#align&#x3D;left&amp;display&#x3D;inline&amp;height&#x3D;786&amp;originHeight&#x3D;786&amp;originWidth&#x3D;620&amp;status&#x3D;done&amp;style&#x3D;none&amp;width&#x3D;620)&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;该属性可能取6个值。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt; - &#96;flex-start&#96;：与交叉轴的起点对齐。</span><br><span class="line">&gt; - &#96;flex-end&#96;：与交叉轴的终点对齐。</span><br><span class="line">&gt; - &#96;center&#96;：与交叉轴的中点对齐。</span><br><span class="line">&gt; - &#96;space-between&#96;：与交叉轴两端对齐，轴线之间的间隔平均分布。</span><br><span class="line">&gt; - &#96;space-around&#96;：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。</span><br><span class="line">&gt; - &#96;stretch&#96;（默认值）：轴线占满整个交叉轴。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;d8d86112&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 四、项目的属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;以下6个属性设置在项目上。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt; - &#96;order&#96;</span><br><span class="line">&gt; - &#96;flex-grow&#96;</span><br><span class="line">&gt; - &#96;flex-shrink&#96;</span><br><span class="line">&gt; - &#96;flex-basis&#96;</span><br><span class="line">&gt; - &#96;flex&#96;</span><br><span class="line">&gt; - &#96;align-self&#96;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;957ef9ab&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 4.1 order属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;order&#96;属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>.item {<br>  order: <integer>;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;![](http:&#x2F;&#x2F;www.ruanyifeng.com&#x2F;blogimg&#x2F;asset&#x2F;2015&#x2F;bg2015071013.png#align&#x3D;left&amp;display&#x3D;inline&amp;height&#x3D;480&amp;originHeight&#x3D;480&amp;originWidth&#x3D;751&amp;status&#x3D;done&amp;style&#x3D;none&amp;width&#x3D;751)&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;b5d1f4f7&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 4.2 flex-grow属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;flex-grow&#96;属性定义项目的放大比例，默认为&#96;0&#96;，即如果存在剩余空间，也不放大。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.item &#123;</span><br><span class="line"> flex-grow: &lt;number&gt;; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071014.png#align=left&display=inline&height=211&originHeight=211&originWidth=802&status=done&style=none&width=802" alt=""><br /><br><br />如果所有项目的<code>flex-grow</code>属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的<code>flex-grow</code>属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍。<br /></p>
+<p><a name="51e5d6bf"></a></p>
+<h3 id="4-3-flex-shrink属性"><a href="#4-3-flex-shrink属性" class="headerlink" title="4.3 flex-shrink属性"></a>4.3 flex-shrink属性</h3><p><br /><code>flex-shrink</code>属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.item &#123;</span><br><span class="line"> flex-shrink: &lt;number&gt;; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071015.jpg#align=left&display=inline&height=145&originHeight=145&originWidth=700&status=done&style=none&width=700" alt=""><br /><br><br />如果所有项目的<code>flex-shrink</code>属性都为1，当空间不足时，都将等比例缩小。如果一个项目的<code>flex-shrink</code>属性为0，其他项目都为1，则空间不足时，前者不缩小。<br /><br><br />负值对该属性无效。<br /></p>
+<p><a name="8a2e2f5e"></a></p>
+<h3 id="4-4-flex-basis属性"><a href="#4-4-flex-basis属性" class="headerlink" title="4.4 flex-basis属性"></a>4.4 flex-basis属性</h3><p><br /><code>flex-basis</code>属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为<code>auto</code>，即项目的本来大小。<br /></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>.item {<br>  flex-basis: <length> | auto;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;它可以设为跟&#96;width&#96;或&#96;height&#96;属性一样的值（比如350px），则项目将占据固定空间。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;2fe1f5ed&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 4.5 flex属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;flex&#96;属性是&#96;flex-grow&#96;, &#96;flex-shrink&#96; 和 &#96;flex-basis&#96;的简写，默认值为&#96;0 1 auto&#96;。后两个属性可选。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>.item {<br>  flex: none | [ &lt;’flex-grow’&gt; &lt;’flex-shrink’&gt;? || &lt;’flex-basis’&gt; ]<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;该属性有两个快捷值：&#96;auto&#96; (&#96;1 1 auto&#96;) 和 none (&#96;0 0 auto&#96;)。&lt;br &#x2F;&gt;</span><br><span class="line">&lt;br &#x2F;&gt;建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&lt;a name&#x3D;&quot;4ed893f4&quot;&gt;&lt;&#x2F;a&gt;</span><br><span class="line">### 4.6 align-self属性</span><br><span class="line"></span><br><span class="line">&lt;br &#x2F;&gt;&#96;align-self&#96;属性允许单个项目有与其他项目不一样的对齐方式，可覆盖&#96;align-items&#96;属性。默认值为&#96;auto&#96;，表示继承父元素的&#96;align-items&#96;属性，如果没有父元素，则等同于&#96;stretch&#96;。&lt;br &#x2F;&gt;</span><br><span class="line"></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.item &#123;</span><br><span class="line"> align-self: auto | flex-start | flex-end | center | baseline | stretch;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><br /><img src="http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071016.png#align=left&display=inline&height=390&originHeight=390&originWidth=743&status=done&style=none&width=743" alt=""><br /><br><br />该属性可能取6个值，除了auto，其他都与align-items属性完全一致。<br /><br><br />（完）</p>
+<p>```</p>
+]]></content>
+      <categories>
+        <category>CSS</category>
+      </categories>
+      <tags>
+        <tag>Flex布局</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaScript 闭包</title>
+    <url>/2020/04/21/JavaScript%20%E9%97%AD%E5%8C%85/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="http://blog.percymong.com/2016/09/11/javascript-closure/" target="_blank" rel="noopener">原文链接</a></p>
+</blockquote>
+<h3 id="什么是闭包（Closure）"><a href="#什么是闭包（Closure）" class="headerlink" title="什么是闭包（Closure）"></a>什么是闭包（Closure）</h3><blockquote>
+<p><strong>简单讲，<a href="https://developer.mozilla.org/cn/docs/Web/JavaScript/Closures" target="_blank" rel="noopener">闭包</a>就是指有权访问另一个函数作用域中的变量的函数。</strong></p>
+<p><strong>MDN 上面这么说</strong>：<strong>闭包是一种特殊的对象</strong>。它由两部分构成：函数，以及创建该函数的环境。环境由闭包创建时在作用域中的任何局部变量组成。</p>
+</blockquote>
+<p>但是，网上找了好多资料，它们对闭包的定义也各有各样，搞得我也不知道怎么去定义闭包了，所以干脆不去定义了，意会吧。</p>
+<a id="more"></a>
+
+<blockquote>
+<p>道可道，非常道；名可名，非常名。</p>
+</blockquote>
+<h3 id="产生一个闭包"><a href="#产生一个闭包" class="headerlink" title="产生一个闭包"></a>产生一个闭包</h3><p><strong>创建闭包最常见方式，就是在一个函数内部创建另一个函数。</strong>下面例子中的 closure 就是一个闭包：</p>
+<pre><code>function func(){
+  var a = 1,b = 2;
+
+  function closure(){
+    return a+b;
+  }
+  return closure;
+}</code></pre><p><strong>闭包的作用域链包含着它自己的作用域，以及包含它的函数的作用域和全局作用域。</strong></p>
+<h3 id="闭包的注意事项"><a href="#闭包的注意事项" class="headerlink" title="闭包的注意事项"></a>闭包的注意事项</h3><ul>
+<li><strong>通常，函数的作用域及其所有变量都会在函数执行结束后被销毁。但是，在创建了一个闭包以后，这个函数的作用域就会一直保存到闭包不存在为止。</strong></li>
+</ul>
+<pre><code>function makeAdder(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+var add5 = makeAdder(5);
+var add10 = makeAdder(10);
+
+console.log(add5(2));  
+console.log(add10(2)); 
+
+
+add5 = null;
+add10 = null;</code></pre><p>add5 和 add10 都是闭包。它们共享相同的函数定义，但是保存了不同的环境。在 add5 的环境中，x 为 5。而在 add10 中，x 则为 10。最后通过 null 释放了 add5 和 add10 对闭包的引用。</p>
+<blockquote>
+<p><strong>在 javascript 中，如果一个对象不再被引用，那么这个对象就会被垃圾回收机制回收；</strong><br><strong>如果两个对象互相引用，而不再被第 3 者所引用，那么这两个互相引用的对象也会被回收。</strong></p>
+</blockquote>
+<ul>
+<li><strong>闭包只能取得包含函数中任何变量的最后一个值，这是因为闭包所保存的是整个变量对象，而不是某个特殊的变量。</strong></li>
+</ul>
+<pre><code>function test(){
+  var arr = [];
+  for(var i = 0;i &lt; 10;i++){
+    arr[i] = function(){
+      return i;
+    };
+  }
+  for(var a = 0;a &lt; 10;a++){
+    console.log(arr[a]());
+  }
+}
+test(); </code></pre><p>对于上面的情况，如果我们改变代码如下：</p>
+<pre><code>function test(){
+  var arr = [];
+  for(let i = 0;i &lt; 10;i++){  
+    arr[i] = function(){
+      return i;
+    };
+  }
+  for(var a = 0;a &lt; 10;a++){
+    console.log(arr[a]());
+  }
+}
+test(); </code></pre><p>对于上面两种代码的解释，请看我在 segmentfault 上面的提问：<a href="https://segmentfault.com/q/1010000006873055" target="_blank" rel="noopener"><strong>链接</strong></a></p>
+<ul>
+<li>闭包中的 this 对象</li>
+</ul>
+<pre><code>var name = &quot;The Window&quot;;
+
+var obj = {
+  name: &quot;My Object&quot;,
+
+  getName: function(){
+    return function(){
+      return this.name;
+    };
+  }
+};
+
+console.log(obj.getName()());  </code></pre><p>obj.getName()() 实际上是在全局作用域中调用了匿名函数，this 指向了 window。这里要理解<strong>函数名与函数功能（或者称函数值）是分割开的</strong>，不要认为函数在哪里，其内部的 this 就指向哪里。<strong>匿名函数的执行环境具有全局性，因此其 this 对象通常指向 window。</strong></p>
+<pre><code>var name = &quot;The Window&quot;;
+
+var obj = {
+  name: &quot;My Object&quot;,
+
+  getName: function(){
+    var that = this;
+    return function(){
+      return that.name;
+    };
+  }
+};
+
+console.log(obj.getName()());  </code></pre><h3 id="闭包的应用"><a href="#闭包的应用" class="headerlink" title="闭包的应用"></a>闭包的应用</h3><ul>
+<li>应用闭包的主要场合是：设计私有的方法和变量。</li>
+</ul>
+<p>任何在函数中定义的变量，都可以认为是私有变量，因为不能在函数外部访问这些变量。私有变量包括函数的参数、局部变量和函数内定义的其他函数。</p>
+<p>把有权访问私有变量的公有方法称为<strong>特权方法（privileged method）</strong>。</p>
+<pre><code>function Animal(){</code></pre><p>​<br>​      var series = “哺乳动物”;<br>​      function run(){<br>​        console.log(“Run!!!”);<br>​      }</p>
+<p>​<br>​      this.getSeries = function(){<br>​        return series;<br>​      };<br>​    }</p>
+<blockquote>
+<p><strong>模块模式（The Module Pattern）</strong>：为单例创建私有变量和方法。</p>
+<p><strong>单例（singleton）</strong>：指的是只有一个实例的对象。JavaScript 一般以对象字面量的方式来创建一个单例对象。</p>
+</blockquote>
+<pre><code>var singleton = {
+  name: &quot;percy&quot;,
+  speak:function(){
+    console.log(&quot;speaking!!!&quot;);
+  },
+  getName: function(){
+    return this.name;
+  }
+};</code></pre><p>上面是普通模式创建的单例，下面使用模块模式创建单例：</p>
+<pre><code>var singleton = (function(){</code></pre><p>​<br>​      var age = 22;<br>​      var speak = function(){<br>​        console.log(“speaking!!!”);<br>​      };</p>
+<p>​<br>​      return {<br>​        name: “percy”,<br>​        getAge: function(){<br>​          return age;<br>​        }<br>​      };<br>​    })();</p>
+<ul>
+<li><strong>匿名函数最大的用途是创建闭包</strong>，并且还可以构建命名空间，以减少全局变量的使用。从而使用闭包模块化代码，减少全局变量的污染。</li>
+</ul>
+<pre><code>var objEvent = objEvent || {};
+(function(){ 
+    var addEvent = function(){ 
+
+    };
+    function removeEvent(){
+
+    }
+
+    objEvent.addEvent = addEvent;
+    objEvent.removeEvent = removeEvent;
+})();</code></pre><p>在这段代码中函数 addEvent 和 removeEvent 都是局部变量，但我们可以通过全局变量 objEvent 使用它，这就大大减少了全局变量的使用，增强了网页的安全性。</p>
+<ul>
+<li>一个闭包计数器</li>
+</ul>
+<pre><code>var countNumber = (function(){
+  var num = 0;
+  return function(){
+    return ++num;
+  };
+})();</code></pre><h3 id="闭包的缺陷"><a href="#闭包的缺陷" class="headerlink" title="闭包的缺陷"></a>闭包的缺陷</h3><ul>
+<li>闭包的缺点就是常驻内存会增大内存使用量，并且使用不当很容易造成内存泄露。</li>
+<li>如果不是因为某些特殊任务而需要闭包，在没有必要的情况下，在其它函数中创建函数是不明智的，因为闭包对脚本性能具有负面影响，包括处理速度和内存消耗。</li>
+</ul>
+<h3 id="最后再来一些有关闭包的面试题"><a href="#最后再来一些有关闭包的面试题" class="headerlink" title="最后再来一些有关闭包的面试题"></a>最后再来一些有关闭包的面试题</h3><ul>
+<li>下面代码中，标记 ？ 的地方输出分别是什么？</li>
+</ul>
+<pre><code>function fun(n,o){
+  console.log(o);
+  return {
+    fun: function(m){
+      return fun(m,n);
+    }
+  };
+}
+
+var a = fun(0);  
+a.fun(1);        
+a.fun(2);        
+a.fun(3);        
+
+var b = fun(0).fun(1).fun(2).fun(3);  
+
+var c = fun(0).fun(1);  
+c.fun(2);        
+c.fun(3);        </code></pre><blockquote>
+<p>undefined<br>0<br>0<br>0<br>undefined, 0, 1, 2<br>undefined, 0<br>1<br>1</p>
+</blockquote>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li>【书】《JavaScript 高级程序设计（第三版）》</li>
+<li>【文章】<a href="http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html" target="_blank" rel="noopener">学习 Javascript 闭包（Closure）</a></li>
+<li>【文章】<a href="https://segmentfault.com/a/1190000004585904" target="_blank" rel="noopener">【JavaScript】【函数】闭包闭包！</a><br><a href="https://segmentfault.com/a/1190000006875662" target="_blank" rel="noopener">https://segmentfault.com/a/1190000006875662</a><br><a href="https://segmentfault.com/a/1190000006875662" target="_blank" rel="noopener">https://segmentfault.com/a/1190000006875662</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript难点</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>不想学习的时候如何逼迫自己学习？</title>
     <url>/2020/04/21/%E4%B8%8D%E6%83%B3%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%97%B6%E5%80%99%E5%A6%82%E4%BD%95%E9%80%BC%E8%BF%AB%E8%87%AA%E5%B7%B1%E5%AD%A6%E4%B9%A0%EF%BC%9F/</url>
     <content><![CDATA[<p><a href="https://www.zhihu.com/question/20773513" target="_blank" rel="noopener">转载自：https://www.zhihu.com/question/20773513</a></p>

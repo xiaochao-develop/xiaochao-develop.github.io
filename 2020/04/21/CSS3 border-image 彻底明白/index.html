@@ -11,7 +11,7 @@
    
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    既然有 HTTP 请求，为什么还要用 RPC 调用？ |  6号小码猿
+    CSS3 border-image 彻底明白 |  6号小码猿
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-既然有 HTTP 请求，为什么还要用 RPC 调用？" class="article article-type-post" itemscope
+  <article id="post-CSS3 border-image 彻底明白" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -52,7 +52,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  既然有 HTTP 请求，为什么还要用 RPC 调用？
+  CSS3 border-image 彻底明白
 </h1>
  
 
@@ -61,12 +61,12 @@
 
     
     <div class="article-meta">
-      <a href="/2020/04/21/%E6%97%A2%E7%84%B6%E6%9C%89%20HTTP%20%E8%AF%B7%E6%B1%82%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E7%94%A8%20RPC%20%E8%B0%83%E7%94%A8%EF%BC%9F/" class="article-date">
-  <time datetime="2020-04-21T02:53:21.000Z" itemprop="datePublished">2020-04-21</time>
+      <a href="/2020/04/21/CSS3%20border-image%20%E5%BD%BB%E5%BA%95%E6%98%8E%E7%99%BD/" class="article-date">
+  <time datetime="2020-04-21T03:18:10.000Z" itemprop="datePublished">2020-04-21</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    <a class="article-category-link" href="/categories/CSS/">CSS</a>
   </div>
 
       
@@ -76,7 +76,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">2k</span>
+            <span class="post-count">1.5k</span>
         </span>
     </span>
 
@@ -85,7 +85,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">6 分钟</span>
+            <span class="post-count">5 分钟</span>
         </span>
     </span>
 </div>
@@ -96,6 +96,8 @@
 
     
     
+    <div class="tocbot"></div>
+
 
 
 
@@ -108,74 +110,88 @@
       
 
       
-      <p><a href="https://www.zhihu.com/question/41609070" target="_blank" rel="noopener">转载自：https://www.zhihu.com/question/41609070</a></p>
-<p>首先，实名赞扬题主的问题。<strong>这个问题非常好</strong>。</p>
-<p>其次，实名反对各个上来就讲RPC好而HTTP不好的答案。因为，<strong>题主的观点非常对</strong>。</p>
-<p>HTTP协议，以其中的Restful规范为代表，其优势很大。它<strong>可读性好</strong>，且<strong>可以得到防火墙的支持、跨语言的支持</strong>。而且，在去年的报告中，Restful<strong>大有超过RPC的趋势</strong>。</p>
+      <p><a href="https://segmentfault.com/a/1190000010969367" target="_blank" rel="noopener">转载自：https://segmentfault.com/a/1190000010969367</a></p>
+<h2 id="border-image用于给border（边框）贴上背景图像"><a href="#border-image用于给border（边框）贴上背景图像" class="headerlink" title="border-image用于给border（边框）贴上背景图像"></a><strong>border-image用于给border（边框）贴上背景图像</strong></h2><blockquote>
+<p>类似于CSS中的background（背景）属性。 例如：background:url(xx.jpg) 27px no-repeat;指的是图片(url(xx.jpg))，位置(27px)，重复性(no-repeat)。</p>
+<p>border-image与此类似，border-image包括图片，剪裁位置（与background位置一样，也是数值，也支持百分值），重复性。<br>例如：border-image:url(border.png) 27 repeat; 指的就是图片(url(border.png))，剪裁位置(27)，重复方式(repeat)。  </p>
+<p><img src="https://segmentfault.com/img/bVUgue?w=392&h=166" alt=""></p>
+</blockquote>
 <a id="more"></a>
 
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下面我们将border-image的复合写法分解描述，</span><br><span class="line"></span><br><span class="line">border-image的主要参数就是上面提到的三个：图片，剪裁位置，重复性。</span><br><span class="line">其实还有另外两个，文章最后面再讲。更好理解</span><br></pre></td></tr></table></figure>
+
+<h2 id="1、图片-border-image-source"><a href="#1、图片-border-image-source" class="headerlink" title="1、图片(border-image-source)"></a>1、图片(border-image-source)</h2><ul>
+<li>border-image的背景图使用url()调用，图片可以是相对路径或是绝对路径，也可以不使用图片，即border-image:none;</li>
+</ul>
+<h2 id="2、图片剪裁位置-border-image-slice"><a href="#2、图片剪裁位置-border-image-slice" class="headerlink" title="2、图片剪裁位置(border-image-slice)"></a>2、图片剪裁位置(border-image-slice)</h2><ul>
+<li>没有单位，默认单位就是像素(px)。例如：border-image:url(border.png) 27 repeat;这里的27专指27px。</li>
+</ul>
+<hr>
+<ul>
+<li>支持百分比值，百分比值大小是相对于边框图片的大小，假设边框图片大小为400px*300px，则20%的实际效果就是剪裁了图片的60px 80px 60px 80px的四边大小。</li>
+</ul>
+<hr>
+<ul>
+<li>剪裁特性。类似于CSS中的clip属性。其有1~4个参数，代表上右下左四个方位的剪裁，符合CSS普遍的方位规则（与margin，padding等或border-width一致），举个简单的例子，前面提到，支持百分比宽度，所以这里“30% 35% 40% 30%”的示意可以用下图表示：<br><img src="https://segmentfault.com/img/bVUaSf?w=180&h=191" alt=""></li>
+</ul>
+<p><em>距离图片上部30%的地方，距离右边35%，距离底部40%，左边30%的地方各剪裁一下。也就是对图片进行了“四刀切”，形成了九个分离的区域，这就是九宫格，这是下面深入讲解border-image的基础。</em></p>
+<h2 id="3、重复性-border-image-repeat"><a href="#3、重复性-border-image-repeat" class="headerlink" title="3、重复性(border-image-repeat)"></a>3、重复性(border-image-repeat)</h2><p>取值为repeat（重复）只是其中之一，其余两个是round（平铺）和stretch（拉伸）。其中，stretch是默认值。</p>
+<p>参数0~2个，0则使用默认值 – stretch，例如：border-image:url(border.png) 30% 40%;就等同于border-image:url(border.png) 30% 40% stretch stretch;；1则表示水平方向及垂直方向均使用此参数；2个参数的话则第一个参数表水平方向，第二个参数表示垂直方向。例如：border-image:url(border.png) 30% 40% round repeat;表示水平方向round（平铺），垂直方向repeat（重复）。</p>
+<p>关于round 和repeat 的区别。<br><strong>round会凑整填充（进行了适度的拉伸）。repeat不进行拉伸，不凑整。</strong> 具体效果看文章后边的例子。</p>
+<h2 id="4、实际渲染规则"><a href="#4、实际渲染规则" class="headerlink" title="4、实际渲染规则"></a>4、实际渲染规则</h2><p>通过裁切属性值，将边框背景图切出了“九宫格”的模型，那这张背景图怎么对应地贴在div的边框上呢？</p>
+<p><img src="https://segmentfault.com/img/bVUbpI?w=81&h=81" alt=""><br> &lt;————————&gt; <img src="https://segmentfault.com/img/bVUbqb?w=81&h=81" alt=""></p>
+<p><img src="https://segmentfault.com/img/bVUbyB?w=337&h=338" alt=""></p>
+<ul>
+<li><strong>如图 在border-image中的橙红色的四个边角只会呆在border的四个角,并且水平和垂直方向均被拉伸来填充border的四个角。</strong></li>
+<li>如图 上下区域即border-top-image和border-bottom-image受到第一个参数——水平方向效果影响：如果为repeat，则此区域被水平重复(round水平平铺，stretch水平拉伸)来填充对应的上下border<strong>【该区域在垂直方向上首先会按所对应的border-image-width的值等比缩放，然后再按参数设置在边框水平方向上进行重复或平铺或拉伸】</strong></li>
+<li>左右区域border-left-image和border-right-image 的作用效果亦然<strong>【该区域在水平方向上首先会按所对应的border-image-width的值等比缩放，然后再按参数设置在边框垂直方向上进行重复或平铺或拉伸】</strong></li>
+</ul>
+<hr>
+<p><img src="https://segmentfault.com/img/bVUm4X?w=800&h=382" alt=""></p>
+<hr>
+<hr>
+<p>我们用下图<strong>(27×3)px *(27×3)px</strong>png 做实验，我给不同部位加了一个序号做标志，便于观察。<br><img src="https://segmentfault.com/img/bVUbhS?w=81&h=81" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 加一个蓝色背景的父级，便于我们分析效果。</span><br><span class="line">.border_image &#123;</span><br><span class="line">    width: 400px;</span><br><span class="line">    height: 115px;</span><br><span class="line">    border: 3em double orange;</span><br><span class="line">    -webkit-border-image: url(border.png) 27 round;</span><br><span class="line">    border-image: url(border.png) 27 round;</span><br><span class="line">&#125;</span><br><span class="line">.box &#123;</span><br><span class="line">    background: blue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;div class&#x3D;&quot;box&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;border_image&quot;&gt;&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbm2?w=655&h=275" alt=""></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">border-image: url(border.png) 27;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbni?w=720&h=262" alt=""></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">border-image: url(border.png) 27 repeat;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br><img src="https://segmentfault.com/img/bVUbnK?w=541&h=246" alt=""></p>
+<hr>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;边框宽度改变</span><br><span class="line">border-image: url(border.png) 27 repeat stretch;</span><br><span class="line">border-width: 3rem 1rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<p><img src="https://segmentfault.com/img/bVUbMp?w=506&h=254" alt=""></p>
+<hr>
+<hr>
+<h2 id="5、-边框背景宽度-border-image-width"><a href="#5、-边框背景宽度-border-image-width" class="headerlink" title="5、(边框背景宽度)border-image-width"></a>5、(边框背景宽度)border-image-width</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">这个属性默认是边框的宽度，用来限制相应区域背景图的范围，</span><br><span class="line">首先相应背景区域的图像会根据这个属性值进行缩放。然后再重复或平铺或拉伸。</span><br><span class="line"></span><br><span class="line">在复合写法中应该位于 slice属性 和repeat属性中间 用“&#x2F;”间隔</span><br><span class="line">如：border-image:url(border.png) 27 &#x2F; 6rem &#x2F; repeat;</span><br></pre></td></tr></table></figure>
+
+<p>语法：border-image-width: [ <length> | <percentage> | <number> | auto ]{1,4}</p>
 <blockquote>
-<p>本想引用下报告内容，无奈最近由于某些原因，KeXueShangWang被Qiang了。等我日后出墙时，再做补充。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">length 带 px, em, in … 单位的尺寸值</span><br><span class="line">percentage 百分比</span><br><span class="line">number 不带单位的数字；它表示 border-width 的倍数</span><br><span class="line">auto 使用 auto， border-image-width 将会使用 border-image-slice 的值</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>但是HTTP也有其缺点，这是与其优点相对应的。首先是<strong>有用信息占比少</strong>，毕竟HTTP工作在第七层，包含了大量的HTTP头等信息。其次是<strong>效率低</strong>，还是因为第七层的缘故。还有，其<strong>可读性似乎没有必要</strong>，因为我们可以引入网关增加可读性。此外，使用HTTP协议<strong>调用远程方法比较复杂</strong>，要封装各种参数名和参数值。</p>
-<p>而RPC则与HTTP互补，我们详细介绍下。看完这篇回答，<strong>能让你对RPC的产生、原理、实现代码都有着清晰的了解</strong>。这样，也能在业务系统中，在RPC和HTTP之间做好抉择。</p>
-<p>但需要再说一句，不是说RPC好，也不是说HTTP好，<strong>两者各有千秋，还在比拼中</strong>。</p>
-<p>要问我站谁？我<strong>根据业务场景，灵活站位……</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 6rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUetX?w=682&h=260" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">border-image-width: 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUeuW?w=659&h=255" alt=""></p>
 <hr>
-<p>评论区产生了一些争论，我在这里统一进行说明。争论主要发生在两点：</p>
-<p>1、<strong>HTTP和RPC同一级别，还是被RPC包含？</strong></p>
-<p>2、<strong>Restful也属于RPC么？</strong></p>
-<p>对于以上两点，我画图来一一说明。</p>
-<p><img src="https://pic3.zhimg.com/50/v2-f79abd8e489337fafc7aafe75799b599_hd.jpg" alt=""></p>
-<p>上图是一个比较完整的关系图，这时我们发现HTTP（图中蓝色框）出现了两次。其中一个是和RPC并列的，都是跨应用调用方法的解决方案；另一个则是被RPC包含的，是RPC通信过程的可选协议之一。</p>
-<p>因此，<strong>第一个问题的答案是都对。看指的是哪一个蓝色框。</strong>从题主的提问看，既然题主在纠结这两者，应该是指与RPC并列的蓝色框。</p>
-<p>第二个问题是在问远程过程调用（红色框）是不是包含了Restful（黄色框），这种理解的关键在于对RPC的理解。</p>
-<p>RPC字面理解是远程过程调用，即在一个应用中调用另一个应用的方法。那Restful是满足的，通过它可以实现在一个应用中调用另一个应用的方法。</p>
-<p>但是，上述理解使得RPC的定义过于宽泛。RPC通常特指在一个应用中调用另一个应用的接口而实现的远程调用，即红色框所指的范围。这样，RPC是不包含Restful的。</p>
-<p>因此，<strong>第二个问题的答案是Restful不属于RPC，除非对RPC有着非常规的宽泛理解。</strong></p>
-<hr>
-<p>RPC的英文全称是Remote Procedure Call，翻译为中文叫“远程过程调用”。其中稍显晦涩的其实就是“过程”，过程其实就是方法。所以，可以把RPC理解为“远程方法调用”。</p>
-<p>要了解远程过程调用，那先理解过程调用。非常简单，如下图，就是调用一个方法。这太常见了，不多解释。</p>
-<p><img src="https://pic2.zhimg.com/50/v2-a5d8d1ec94bc8726faa23902b1507acf_hd.jpg" alt=""></p>
-<p>而在分布式系统中，因为每个服务的边界都很小，很有可能调用别的服务提供的方法。这就出现了服务A调用服务B中方法的需求，即远程过程调用。</p>
-<p>要想让服务A调用服务B中的方法，最先想到的就是通过HTTP请求实现。是的，这是很常见的，例如服务B暴露Restful接口，然后让服务A调用它的接口。基于Restful的调用方式因为可读性好（服务B暴露出的是Restful接口，可读性当然好）而且HTTP请求可以通过各种防火墙，因此非常不错。</p>
-<p>然而，如前面所述，基于Restful的远程过程调用有着明显的缺点，主要是效率低、封装调用复杂。当存在大量的服务间调用时，这些缺点变得更为突出。</p>
-<p>服务A调用服务B的过程是应用间的内部过程，<strong>牺牲可读性提升效率、易用性是可取的</strong>。基于这种思路，RPC产生了。</p>
-<p>通常，RPC要求在调用方中放置被调用的方法的接口。<strong>调用方只要调用了这些接口，就相当于调用了被调用方的实际方法，十分易用</strong>。于是，调用方可以像调用内部接口一样调用远程的方法，而不用封装参数名和参数值等操作。</p>
-<p><img src="https://pic2.zhimg.com/50/v2-f6c29c414d2924b157ec555c6a664343_hd.jpg" alt=""></p>
-<p>那要想实现这个过程该怎么办呢？别急，咱们一步一步来。</p>
-<p>首先，调用方调用的是接口，必须得为接口构造一个假的实现。显然，要使用动态代理。这样，调用方的调用就被动态代理接收到了。</p>
-<p>第二，动态代理接收到调用后，应该想办法调用远程的实际实现。这包括下面几步：</p>
-<ul>
-<li>识别具体要调用的远程方法的IP、端口</li>
-<li>将调用方法的入参进行序列化</li>
-<li>通过通信将请求发送到远程的方法中</li>
-</ul>
-<p>这样，远程的服务就接收到了调用方的请求。它应该：</p>
-<ul>
-<li>反序列化各个调用参数</li>
-<li>定位到实际要调用的方法，然后输入参数，执行方法</li>
-<li>按照调用的路径返回调用的结果</li>
-</ul>
-<p>整个过程如下所示。</p>
-<p><img src="https://pic2.zhimg.com/50/v2-bd07238f5104a05889a0f242ef8e33f0_hd.jpg" alt=""></p>
-<p>这样，RPC操作就完成了。</p>
-<p>调用方调用内部的一个方法，但是被RPC框架偷梁换柱为远程的一个方法。之间的<strong>通信数据可读性不需要好</strong>，只需要RPC框架能读懂即可，因此<strong>效率可以更高</strong>。通常使用UDP或者TCP作为通讯协议，当然也可以使用HTTP。例如下面的示例中，为了保证实现最简单，就用了HTTP进行通信。</p>
-<p>讲到这里，<strong>RPC的产生原因、原理应该清楚了</strong>。为了让大家真的明白，我写了一个真的是<strong>最最简单的RPC实现</strong>。把它放到了：</p>
-<p><a href="https://github.com/yeecode/EasyRPC" target="_blank" rel="noopener">https://github.com/yeecode/EasyRPC​github.com</a></p>
-<p>它包含一个客户端，一个服务端。客户端只要调用自身内部的接口，就通过这个小的RPC实现调用到了服务端的方法。</p>
-<p>下面是客户端的代码，看着类有点多，其实代码不长。其中的RPC代码完成完成动态代理、远程调用参数序列化、远程调用发起、远程调用结果反序列化的工作。</p>
-<p><img src="https://pic2.zhimg.com/50/v2-2bcd46610d7fbc08883047c5c77d6166_hd.jpg" alt=""></p>
-<p>RPC客户端</p>
-<p>下面是服务端的代码，代码更少，完成远程调用接收、调用参数反序列化、调用实际触发、调用结果序列化的工作。</p>
-<p><img src="https://pic3.zhimg.com/50/v2-1caa6254ad5961f216a2bc89004c2a7d_hd.jpg" alt=""></p>
-<p>RPC服务端</p>
-<p>这样，一个RPC小框架就做完了，并不复杂。</p>
-<p>所以，不要被RPC吓到，它就是<strong>让一个应用调用另一个应用中方法的一种实现方式</strong>。与调用远程接口区别不大，条条大路通罗马。</p>
-<p>再说一次，不是说RPC好，也不是说HTTP好，两者各有千秋。本质上，两者是<strong>可读性和效率之间的抉择</strong>，<strong>通用性和易用性之间的抉择</strong>。最终谁能发展更好，很难说。</p>
-<p>要问我站谁？我<strong>根据业务场景，灵活站位……</strong></p>
-<p>如果还有什么没说清楚，可以留言讨论。</p>
-<p>也可以<strong>关注我</strong>，偶尔出没解答架<strong>构设计和编程</strong>问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 6rem 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUeCn?w=753&h=281" alt=""></p>
+<h2 id="6、（边框背景扩散）border-image-outset"><a href="#6、（边框背景扩散）border-image-outset" class="headerlink" title="6、（边框背景扩散）border-image-outset"></a>6、（边框背景扩散）border-image-outset</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">语法：border-image-outset: [ &lt;length&gt; | &lt;number&gt; ]&#123;1,4&#125;</span><br><span class="line">相当于把原来的贴图位置向外延伸。不能为负值，试一下就知道。</span><br><span class="line"></span><br><span class="line">在复合写法中应该位于 border-image-width 后面，用“&#x2F;”间隔</span><br><span class="line">如：border-image:url(border.png) 27 &#x2F; 6rem &#x2F; 1.5rem &#x2F;repeat;</span><br><span class="line">向外延伸1.5rem再贴图。。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">border: 3em double orange;</span><br><span class="line">border-image: url(border.png) 27 round;</span><br><span class="line">border-image-width: 1.5rem;</span><br><span class="line">border-image-outset: 1.5rem;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下：<br>（白框为border）<br><img src="https://segmentfault.com/img/bVUewz?w=777&h=325" alt=""></p>
+<p>ps 部分资料来源网络</p>
 
       
       <!-- reward -->
@@ -234,14 +250,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/21/%E6%97%A2%E7%84%B6%E6%9C%89%20HTTP%20%E8%AF%B7%E6%B1%82%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E7%94%A8%20RPC%20%E8%B0%83%E7%94%A8%EF%BC%9F/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/21/CSS3%20border-image%20%E5%BD%BB%E5%BA%95%E6%98%8E%E7%99%BD/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AF%8F%E5%91%A8%E4%B8%80%E9%97%AE/" rel="tag">每周一问</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS%E5%B1%9E%E6%80%A7/" rel="tag">CSS属性</a></li></ul>
 
 
     </footer>
@@ -252,19 +268,19 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/04/21/CSS3%20border-image%20%E5%BD%BB%E5%BA%95%E6%98%8E%E7%99%BD/" class="article-nav-link">
+      <a href="/2020/04/21/Flex%20%E5%B8%83%E5%B1%80%E6%95%99%E7%A8%8B%EF%BC%9A%E8%AF%AD%E6%B3%95%E7%AF%87/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            CSS3 border-image 彻底明白
+            Flex 布局教程：语法篇
           
         </div>
       </a>
     
     
-      <a href="/2020/04/21/%E4%B8%8D%E6%83%B3%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%97%B6%E5%80%99%E5%A6%82%E4%BD%95%E9%80%BC%E8%BF%AB%E8%87%AA%E5%B7%B1%E5%AD%A6%E4%B9%A0%EF%BC%9F/" class="article-nav-link">
+      <a href="/2020/04/21/%E6%97%A2%E7%84%B6%E6%9C%89%20HTTP%20%E8%AF%B7%E6%B1%82%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E7%94%A8%20RPC%20%E8%B0%83%E7%94%A8%EF%BC%9F/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">不想学习的时候如何逼迫自己学习？</div>
+        <div class="article-nav-title">既然有 HTTP 请求，为什么还要用 RPC 调用？</div>
       </a>
     
   </nav>
